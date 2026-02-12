@@ -19,6 +19,7 @@ pip install pyinstaller
 echo [4/4] Creazione EXE...
 pyinstaller --onefile --windowed --name "EthoRenamer" ^
   --add-data "src:src" ^
+  --hidden-import=concurrent.futures ^
   app.py
 
 echo.
