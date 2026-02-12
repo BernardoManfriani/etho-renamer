@@ -1,0 +1,8 @@
+"""
+Placeholder per icona app.
+Per un'icona vera:
+1. Crea immagine 256x256 PNG
+2. Converti con: convert app.png app.ico (ImageMagick)
+   oppure usa online tool: icoconvert.com
+3. Salva come app.ico nella root
+"""
