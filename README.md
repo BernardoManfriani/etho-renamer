@@ -288,7 +288,8 @@ https://github.com/BernardoManfriani/etho-renamer
 
 For issues, questions, or collaboration:
 - Open an Issue on GitHub
-- Contact: [your email]
+- Contact: bernadomanfriani@gmail.com
+- www.qursor.it
 
 ---
 
