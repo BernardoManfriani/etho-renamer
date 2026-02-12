@@ -1,0 +1,22 @@
+EthoRenamer - Academic and Research License
+=============================================
+
+This software is provided for academic and research purposes only.
+
+PERMITTED USE:
+- Academic research
+- University projects
+- Ethological studies (non-profit)
+- Educational purposes
+
+PROHIBITED USE:
+- Commercial use
+- Redistribution for profit
+- Incorporation in commercial software
+- Any monetization of this software
+
+For commercial licensing, please contact the authors.
+
+---
+
+Copyright (c) 2026 EthoRenamer Contributors

@@ -418,9 +418,27 @@ pip install -e ".[dev]"
 
 ---
 
-## License
+## 📜 License
 
-MIT
+**Academic and Research Use Only**
+
+This software is provided for academic and research purposes only.
+
+### ✅ Permitted Use:
+- Academic research
+- University projects
+- Ethological studies (non-profit)
+- Educational purposes
+
+### ❌ Prohibited Use:
+- Commercial use
+- Redistribution for profit
+- Incorporation in commercial software
+- Any monetization of this software
+
+For commercial licensing, please contact the authors.
+
+See [LICENSE.txt](LICENSE.txt) for full details.
 
 ---
 
