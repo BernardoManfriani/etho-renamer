@@ -1,420 +1,204 @@
-# EthoRenamer - Video Renamer & Observations CSV
+# EthoRenamer - Video Renaming & Ethological Observations Tool
 
-App desktop Windows per rinominare video di cuccioli e generare automaticamente CSV di osservazioni etologiche.
+Windows desktop application for researchers to rename puppy video recordings and automatically generate structured CSV observation reports for ethological data analysis.
 
-## 🚀 Quick Start (Utenti)
+## 🚀 Quick Start
 
-1. **Scarica la repo** (green button → Download ZIP)
-2. **Estrai la cartella**
-3. **Doppio click su `setup.bat`** (installa tutto)
-4. **Doppio click su `run.bat`** per avviare l'app
+### Option A: Standalone Executable (Easiest for Users)
+1. Go to [GitHub Releases](../../releases)
+2. Download `EthoRenamer.exe`
+3. Double-click to run (no installation needed!)
 
-Vedi [INSTALLAZIONE.md](INSTALLAZIONE.md) per dettagli.
-
----
-
-## 📋 Panoramica
-
-EthoRenamer rinomina file video secondo il pattern:
-
-```
-YYYYMMDD_pupX_NomeMamma_mmm_YY_HHMM_[PartN_]INIZIALI.EXT
-```
-
-**Esempio:**
-```
-20260212_pup4_Nova_feb_26_1220_Part1_IM.MTS
-```
-
-E genera automaticamente un **CSV di osservazioni** con:
-- Pup_ID, Obs (numero), Date, Time
-- Weather, Wind, Temperature, Observer
-- part1, part2, part3, part4 (durate video)
-- Activity (Full/Sleep), Notes
-- Campi di coding (vuoti per ora)
-
-### ✨ Caratteristiche
-
-- ✅ UI desktop intuitiva con PySide6
-- ✅ Supporto multi-selezione file + cartelle
-- ✅ Preview in tempo reale
-- ✅ Calcolo automatico durata video (ffprobe)
-- ✅ Parsing data da prefisso filename o mtime
-- ✅ Part (PartN) **opzionale**
-- ✅ Dry-run (anteprima senza modificare)
-- ✅ **Generazione automatica CSV osservazioni**
-- ✅ Esportazione CSV (Excel IT compatibile)
-- ✅ Log audit con timestamp
-- ✅ Thread pool operazioni non-bloccanti
-- ✅ Gestione conflitti file
-- ✅ Watchdog per reload automatico (dev)
+### Option B: From Source (Developers)
+1. Download the repository (Code → Download ZIP)
+2. Extract the folder
+3. Double-click `setup.bat` (installs everything)
+4. Double-click `run.bat` to launch
 
 ---
 
-## 📦 Requisiti
+## 📋 Overview
 
-### Sistema
+EthoRenamer is designed for ethological researchers to efficiently process video recordings. It:
+
+1. **Renames videos** with a standardized naming convention
+2. **Extracts metadata** automatically (date, time, duration)
+3. **Generates CSV reports** for observation data
+
+### Naming Pattern
+
+```
+YYYYMMDD_pupX_MomName_mmm_YY_HHMM_[PartN_]INITIALS.EXT
+```
+
+**Example:**
+- Input: `20260212_something.MTS`
+- Output: `20260212_pup4_Nova_feb_26_1220_IM.MTS`
+
+### Generated CSV Columns
+
+| Column | Description | Auto-filled? |
+|--------|-------------|------------|
+| Pup_ID | Identifier (e.g., pup4_nova_feb_26) | ✅ |
+| Obs | Observation number (incremental) | ✅ |
+| Date | YYYY/MM/DD | ✅ |
+| Time | HH:MM | ✅ |
+| Weather | User input | ❌ |
+| Wind | User input | ❌ |
+| Temperature | User input | ❌ |
+| Observer | Auto from initials | ✅ |
+| part1-4 | Video durations MM'SS | ✅ |
+| Activity | Full / Sleep | ❌ |
+| Notes | User observations | ❌ |
+| Coding_* | Reserved for analysis | (empty) |
+
+---
+
+## ✨ Key Features
+
+- ✅ **Multi-file selection** with checkboxes
+- ✅ **Real-time preview** before renaming
+- ✅ **Automatic video duration** detection (ffprobe)
+- ✅ **Flexible naming** with optional Part field
+- ✅ **Dry-run mode** to preview without modifying files
+- ✅ **Automatic CSV generation** with persistent append
+- ✅ **Excel-compatible** (semicolon-separated for European locales)
+- ✅ **Thread-safe** multi-threaded operations
+- ✅ **Conflict detection** to prevent overwrites
+- ✅ **Audit log** with timestamps
+- ✅ **Internationalized UI** (easily translatable)
+
+---
+
+## 📦 Requirements
+
+### System
 - **Windows 10/11**
-- **Python 3.8+** (installato automaticamente da `setup.bat`)
-- **ffmpeg/ffprobe** (installato automaticamente)
+- **Python 3.8+** (auto-installed by setup.bat)
+- **ffmpeg/ffprobe** (auto-installed by setup.bat)
 
-### Dipendenze Python
-- PySide6 (GUI)
-- pydantic (validazione)
+### Python Dependencies
+- **PySide6**: GUI framework
+- **pydantic**: Data validation
+- **watchdog**: File monitoring (dev only)
 
 ---
 
-## 📥 Installazione
+## 📥 Installation
 
-### Per Utenti (Windows - Facile!)
+### For End Users
 
-**Primo avvio (una sola volta):**
+#### Option 1: Standalone Executable (Recommended)
+```
+1. Download EthoRenamer.exe from Releases
+2. Double-click to run
+3. Done!
+```
 
-1. Scarica la repo: clicca il **green button "Code"** → **"Download ZIP"**
-2. Estrai la cartella (potrebbe richiedere qualche secondo)
-3. Apri la cartella estratta
-4. **Doppio click su `setup.bat`** 
-   - Si aprirà una finestra nera (terminale)
-   - Aspetta che finisca (installa Python, dipendenze, ffmpeg - ci vorrà 5-10 minuti)
-   - Chiuderà automaticamente quando finisce
+If Windows blocks it:
+- Right-click → Properties → Check "Unblock" → Apply → OK
 
-**Usi successivi (ogni volta che vuoi usare l'app):**
-
-- **Doppio click su `run.bat`** nella stessa cartella
-- L'app si avvierà automaticamente
-- Chiudi il terminale quando hai finito
-
-### Se preferisci usare il Terminale PowerShell:
-
+#### Option 2: From Source
 ```powershell
-# Primo avvio (una sola volta)
+# One-time setup
 .\setup.bat
 
-# Usi successivi
+# Every time you run the app
 .\run.bat
 ```
 
-Vedi [INSTALLAZIONE.md](INSTALLAZIONE.md) per dettagli.
-
-### 1. Ambiente virtuale (Development)
+### For Developers
 
 ```powershell
-# Clona o estrai il progetto
+# Clone repository
+git clone https://github.com/BernardoManfriani/etho-renamer.git
 cd etho-renamer
 
-# Crea ambiente virtuale
+# Setup
 python -m venv .venv
 .venv\Scripts\Activate.ps1
-
-# Installa dipendenze
 pip install -r requirements.txt
-```
 
-### 2. Installa ffmpeg (Richiesto)
-
-#### Opzione A: PATH globale
-```powershell
-# Scarica ffmpeg da https://ffmpeg.org/download.html
-# Oppure usa Chocolatey:
-choco install ffmpeg
-
-# Verifica:
-ffprobe -version
-```
-
-#### Opzione B: Cartella locale `./bin/` (consigliato per .exe)
-```powershell
-# Crea cartella
-mkdir bin
-
-# Scarica ffprobe.exe da https://ffmpeg.org/download.html
-# Copia in ./bin/ffprobe.exe
-
-# L'app cercherà lì automaticamente
-```
-
----
-
-## Avvio
-
-### Development
-```powershell
-# Con virtualenv attivo
+# Run
 python app.py
-```
 
-### Eseguibile .exe
-```powershell
-# Dopo build (vedi sotto)
-EthoRenamer.exe
+# Auto-reload on code changes
+python watch.py
 ```
 
 ---
 
-## Build Eseguibile
+## 🔧 How to Use
 
-### Prerequisiti
-```powershell
-pip install pyinstaller
-```
+### Step 1: Select Videos
+- Click "Choose Files..." → select one or more videos
+- Or click "Choose Folder..." → select all videos in a folder
 
-### Script build PowerShell
+Selected files appear in the table with checkboxes (enabled by default).
 
-```powershell
-# Esegui lo script
-.\build_exe.ps1
-```
+### Step 2: Fill Rename Parameters
+| Field | Example | Required? | Notes |
+|-------|---------|-----------|-------|
+| **pup** | pup4 | ✅ | Puppy identifier |
+| **Mom name** | Nova | ✅ | Mother's name |
+| **Month** | feb | ✅ | Abbreviated month |
+| **Year** | 26 | ✅ | 2-digit year |
+| **Initials (Observer)** | IM | ✅ | 1-5 letters, used as Observer in CSV |
+| **Part** | Part1 | ❌ | Optional (e.g., Part1, Part2) |
 
-Lo script:
-1. Crea virtualenv pulito
-2. Installa dipendenze
-3. Esegue PyInstaller
-4. Genera `dist/EthoRenamer.exe`
+### Step 3: Preview
+- Click "Update preview"
+- Check the "New name" column for the renamed filenames
 
-### Build manuale
-```powershell
-pyinstaller --noconsole --onefile --name EthoRenamer app.py
-```
+### Step 4: Fill Observation Data
+| Field | Options | Required? |
+|-------|---------|-----------|
+| **Weather** | Cloudy, Partially Cloudy, Sunny | ❌ |
+| **Wind** | No Wind, Light Wind, Windy | ❌ |
+| **Temperature** | (number) | ❌ |
+| **Activity** | Full, Sleep | ❌ |
+| **Notes** | (free text) | ❌ |
 
-**Output:** `dist/EthoRenamer.exe`
+### Step 5: Select Files to Rename
+- Uncheck files you don't want to rename (all are checked by default)
 
----
+### Step 6: Rename
+- **For preview only**: Keep "Dry-run" checked, click "Rename"
+- **To actually rename**: Uncheck "Dry-run", click "Rename"
 
-## Uso
+Log shows success/errors for each file.
 
-### 1. Seleziona file/cartella
-
-- **"Scegli file..."**: seleziona più video
-- **"Scegli cartella..."**: prende tutti i video nella cartella (non ricorsivo)
-
-### 2. Compila dati
-
-| Campo | Esempio | Note |
-|-------|---------|------|
-| **pup** | `pup4` | Pattern: `pup[numero]` |
-| **Nome mamma** | `Nova` | Lettere, numeri, `-`, `_` (no spazi) |
-| **Mese** | `feb` | Abbreviazione inglese o full name |
-| **Anno** | `26` o `2026` | Accetta 2 o 4 cifre |
-| **Iniziali** | `IM` | 1-5 lettere A-Z (default: IM) |
-| **Part** | `Part1` | `Part[numero]` (default: Part1) |
-
-### 3. Anteprima
-
-L'app calcola e mostra il preview in tabella:
-- **Nome attuale** → **Nuovo nome**
-- **Stato**: `ok`, `error`, `conflict`, `pending`
-- **Durata**: ricavata da ffprobe
-- **Messaggio**: dettagli su errori/conflitti
-
-### 4. Opzioni
-
-| Opzione | Effetto |
-|---------|---------|
-| **Dry-run** | ON (default): mostra preview; OFF: esegue rename |
-| **Aggiorna anteprima** | Ricalcola preview manualmente |
-| **Rinomina** | Esegue rinomina (se non dry-run) |
-| **Esporta report CSV** | Salva risultati con separatore `;` |
-
-### 5. Log e stato
-
-- **Barra di stato**: Totali / OK / Errori / In elaborazione
-- **Pannello log**: Timestamp + dettagli operazioni (audit trail)
+### Step 7: Export CSV
+- Click "Export report CSV"
+- Select output location
+- CSV is appended to existing file (doesn't overwrite)
 
 ---
 
-## Validazioni
+## 📊 CSV Output Example
 
-### Input
-
-| Campo | Regex | Esempio | Errore se |
-|-------|-------|---------|-----------|
-| pup | `^pup\d+$` | `pup4` | Non matcha pattern |
-| mama_name | `^[a-zA-Z0-9\-_]+$` | `Nova` | Contiene spazi/caratteri invalidi |
-| month | 12 mesi EN | `jan`, `february` | Non riconosciuto |
-| year | 2 o 4 cifre | `26`, `2026` | Non numerico |
-| initials | `^[A-Z]{1,5}$` | `IM` | Non A-Z o >5 lettere |
-| part | `^Part\d+$` | `Part1` | Non matcha pattern |
-
-### File
-
-| Validazione | Effetto |
-|-------------|---------|
-| **Estensione** | Solo `.mts`, `.mp4`, `.mov`, `.avi` |
-| **ffprobe** | Se fallisce: mostra errore, non rinomina |
-| **File esiste** | Se target esiste: segna `conflict`, non sovrascrive |
-| **mtime** | Usato come base per hora de inizio registrazione |
-
-### Calcolo data/ora
-
-1. **mtime**: data/ora ultima modifica file
-2. **durata**: ricavata da ffprobe (secondi)
-3. **ora_inizio**: mtime - durata
-4. **YYYYMMDD_finale**:
-   - Se filename ha prefisso `YYYYMMDD_`: usa quello
-   - Altrimenti: usa data da ora_inizio
-5. **HHMM_finale**: sempre da ora_inizio
-
-**Esempio:**
-- File: `20260101_old.mts`
-- mtime: `2026-02-02 12:30:00`
-- durata: `600 sec` (10 minuti)
-- ora_inizio: `2026-02-02 12:20:00`
-- Prefisso data trovato: `20260101`
-- **YYYYMMDD finale**: `20260101` (dal prefisso)
-- **HHMM finale**: `1220` (da ora_inizio)
-- **Risultato**: `20260101_pup4_Nova_jan_26_1220_Part1_IM.MTS`
-
----
-
-## Risoluzione problemi
-
-### "ffprobe non trovato"
-
-**Soluzione:**
-1. Installa ffmpeg:
-   ```powershell
-   choco install ffmpeg
-   ```
-   oppure
-2. Scarica ffprobe.exe e copia in `./bin/`:
-   - https://ffmpeg.org/download.html → Windows builds
-   - Rinomina `ffprobe.exe` e metti in `bin/`
-   - Riavvia app
-
-### "Errore parsing durata"
-
-- ffprobe eseguito ma non ha trovato `format.duration`
-- Controlla: il file è un video valido?
-- Prova comando manualmente:
-  ```powershell
-  ffprobe -v error -print_format json -show_format "C:\path\to\video.mts"
-  ```
-
-### "File target esiste già (conflict)"
-
-- Non verrà sovrascritto
-- Rinomina/elimina il target e riprova
-- Oppure modifica input (pup, mamma, etc) per generare nome diverso
-
-### "Iniziali non valide"
-
-- Deve essere A-Z (1-5 lettere)
-- `im` → accettato, normalizzato a `IM`
-- `i_m` → rifiutato (underscore non permesso nelle iniziali)
-
-### App lenta con 50+ file
-
-- ffprobe viene eseguito in parallelo (max 4 worker)
-- Attendere caricamento completo prima di cliccare "Rinomina"
-- Barra di stato mostra "In elaborazione: N"
-
-### DLL/Runtime errors (.exe)
-
-Potrebbe mancare Visual C++ redistributable:
-```powershell
-# Scarica da Microsoft:
-https://support.microsoft.com/en-us/help/2977003
+```
+Pup_ID,Obs,Date,Time,Weather,Wind,Temperature,Observer,part1,part2,part3,part4,Activity,Notes
+pup4_nova_feb_26,1,2026/02/12,12:20,Sunny,Light Wind,15,IM,12'34,,,Sleep,Sleeping peacefully
+pup4_nova_feb_26,2,2026/02/12,12:35,Sunny,Light Wind,15,IM,,5'20,,Full,Woke up and played
 ```
 
 ---
 
-## Struttura progetto
+## 🔨 Building Standalone Executable
 
-```
-etho-renamer/
-├── src/etho_renamer/
-│   ├── __init__.py
-│   ├── validation.py      # Regex e normalizzazione input
-│   ├── models.py          # Dataclass FileInfo, InputData, RenameResult
-│   ├── config.py          # Costanti (mesi, estensioni, etc)
-│   ├── ffprobe.py         # Wrapper ffprobe
-│   ├── core.py            # Logica rinomina
-│   ├── report.py          # Export CSV
-│   └── ui/
-│       ├── __init__.py
-│       └── main_window.py # PySide6 MainWindow
-├── tests/
-│   ├── __init__.py
-│   └── test_core.py       # Test unitari
-├── app.py                 # Entrypoint
-├── build_exe.ps1          # Script build
-├── pyproject.toml         # Metadata progetto
-├── requirements.txt       # Dipendenze
-├── README.md              # Questo file
-└── bin/                   # (opzionale) ffprobe.exe locale
-```
-
----
-
-## Test
+Developers can create `EthoRenamer.exe` for distribution:
 
 ```powershell
-# Install test deps
-pip install pytest
+# Run build script
+.\build_exe.bat
 
-# Esegui test
-pytest tests/ -v
-
-# Con coverage
-pip install pytest-cov
-pytest tests/ --cov=src/etho_renamer -v
+# Output: dist/EthoRenamer.exe (~150MB)
 ```
 
-### Test coverage
+Then upload to GitHub Releases for users to download.
 
-Testa:
-- ✅ Normalizzazione (pup, mamma, mese, anno, iniziali, part)
-- ✅ Parsing prefisso data (YYYYMMDD_)
-- ✅ Calcolo filename (con/senza prefisso)
-- ✅ Validazione con dati mock (no ffprobe)
-
----
-
-## CSV Report
-
-### Formato
-
-Separatore: `;` (per Excel italiano)
-
-| Colonna | Descrizione |
-|---------|-------------|
-| `original_path` | Path completo file originale |
-| `original_filename` | Nome file originale |
-| `new_name` | Nuovo nome (preview) |
-| `status` | `ok`, `error`, `conflict` |
-| `message` | Dettagli esito |
-
-### Esempio
-```
-original_path;original_filename;new_name;status;message
-C:\video\test.mts;test.mts;20260202_pup4_Nova_feb_26_1220_Part1_IM.mts;ok;Rinominato con successo
-C:\video\old.mp4;old.mp4;;;error;ffprobe error: timeout
-```
-
----
-
-## Sviluppo
-
-### Setup locale
-
-```powershell
-.venv\Scripts\Activate.ps1
-pip install -e ".[dev]"
-```
-
-### Aggiungere feature
-
-1. **Validazione**: aggiungi regex in `validation.py`
-2. **Logica**: aggiungi funzioni in `core.py` (pure functions!)
-3. **UI**: modifica `main_window.py`
-4. **Test**: aggiungi test in `tests/test_core.py`
-
-### Principi
-
-- **No side effects**: core.py funzioni pure (facili da testare)
-- **UI async**: ffprobe in thread pool, non blocca GUI
-- **Type hints**: typing complete per tutte le funzioni
-- **Error handling**: messaggi user-friendly
+See [BUILD_EXE.md](BUILD_EXE.md) for details.
 
 ---
 
@@ -424,43 +208,88 @@ pip install -e ".[dev]"
 
 This software is provided for academic and research purposes only.
 
-### ✅ Permitted Use:
+✅ **Permitted Uses:**
 - Academic research
-- University projects
+- University projects  
 - Ethological studies (non-profit)
 - Educational purposes
 
-### ❌ Prohibited Use:
+❌ **Prohibited:**
 - Commercial use
 - Redistribution for profit
 - Incorporation in commercial software
-- Any monetization of this software
 
-For commercial licensing, please contact the authors.
+For commercial licensing, contact the authors.
 
 See [LICENSE.txt](LICENSE.txt) for full details.
 
 ---
 
-## FAQ
+## 🐛 Troubleshooting
 
-**Q: Posso rinominare file su rete/NAS?**
-A: Sì, se il percorso è accessibile e mtime è leggibile. Attenzione: operazioni lente su rete.
+### "Windows cannot open this file"
+→ Right-click .exe → Properties → Check "Unblock" → OK
 
-**Q: Che estensioni supporta?**
-A: `.mts`, `.mp4`, `.mov`, `.avi` (case-insensitive). Aggiungi altre in `config.py`.
+### "ModuleNotFoundError: No module named 'PySide6'"
+→ Run `setup.bat` again to install dependencies
 
-**Q: Backup automatico?**
-A: No. Usa dry-run sempre come preview prima di rename vero.
+### "ffprobe not found"
+→ Run `setup.bat` to install ffmpeg automatically
 
-**Q: Posso rinominare in batch ricorsivo?**
-A: Non dal UI. Modifica il codice per aggiungere `-r` flag in selezione cartella.
+### CSV file appears empty
+→ Check that observation data was filled before clicking "Rename"
 
-**Q: ffprobe per Linux/Mac?**
-A: Il codice è cross-platform, ma build .exe è Windows-only. Adatta `build_exe.ps1`.
+### Renamed file causes "conflict" error
+→ File with that name already exists; rename/delete the original first
 
 ---
 
-**Versione:** 1.0.0  
-**Data:** Febbraio 2026  
-**Autore:** EthoRenamer Team
+## 🤝 Contributing
+
+To contribute:
+1. Fork the repository
+2. Create a feature branch
+3. Make changes
+4. Submit a pull request
+
+### Code Structure
+```
+etho-renamer/
+├── app.py                 # Main entry point
+├── src/
+│   └── etho_renamer/
+│       ├── core.py        # Rename logic
+│       ├── models.py      # Data models
+│       ├── validation.py  # Input validation
+│       ├── ffprobe.py     # Video duration extraction
+│       ├── report.py      # CSV export
+│       ├── config.py      # Configuration
+│       └── ui/
+│           └── main_window.py  # Desktop UI
+└── tests/
+    └── test_core.py       # Unit tests
+```
+
+---
+
+## 📝 Citation
+
+If you use EthoRenamer in your research, please cite:
+
+```
+BernardoManfriani (2026). EthoRenamer: Video Renaming & Ethological 
+Observations Tool. GitHub repository: 
+https://github.com/BernardoManfriani/etho-renamer
+```
+
+---
+
+## 📧 Contact
+
+For issues, questions, or collaboration:
+- Open an Issue on GitHub
+- Contact: [your email]
+
+---
+
+**Made with ❤️ for ethological researchers**
