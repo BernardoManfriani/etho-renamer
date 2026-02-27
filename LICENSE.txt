@@ -19,4 +19,6 @@ For commercial licensing, please contact the authors.
 
 ---
 
-Copyright (c) 2026 EthoRenamer Contributors
+Copyright (c) 2026 EthoRenamer Contributors, 
+www.qursor.it
+Bernardo Manfriani
